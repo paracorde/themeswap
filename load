@@ -9,7 +9,7 @@ import sys
 import jinja2
 
 parser = argparse.ArgumentParser(description='Swap themes.')
-parser.add_argument('--config', dest='config_path', default='~/.config/themes/documents/config.json')
+parser.add_argument('--config', dest='config_path', default='~/.config/themes/config.json')
 parser.add_argument('theme')
 
 arguments = parser.parse_args()
