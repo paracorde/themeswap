@@ -1,0 +1,38 @@
+#!/bin/python
+
+import argparse
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+import jinja2
+
+parser = argparse.ArgumentParser(description='Swap themes.')
+parser.add_argument('--config', dest='config_path', default='~/.config/themes/documents/config.json')
+parser.add_argument('theme')
+
+arguments = parser.parse_args()
+
+with Path(arguments.config_path).expanduser().open('r') as file:
+    config = json.load(file)
+
+with (Path(config.get('theme_path') or '~/.config/themes/documents').expanduser()/f'{arguments.theme}.json').open('r') as file:
+    theme = json.load(file)
+
+theme['opacitypercentage'] = int(theme['opacity']*100)
+theme['transparencypercentage'] = 100-theme['opacitypercentage']
+a = hex(int(theme['opacity']*255))[2:]
+theme['argbbackground'] = '#' + a + theme['background'][1:]
+theme['rgbabackground'] = theme['background'] + a
+
+generate = config['generate']
+
+for source, destination in generate.items():
+    with Path(source).expanduser().open('r') as file:
+        contents = file.read()
+    with Path(destination).expanduser().open('w') as file:
+        file.write(jinja2.Template(contents).render(**theme))
+
+for command in config['commands']:
+    subprocess.run(jinja2.Template(command).render(**theme), shell=True, stdout=sys.stdout)
