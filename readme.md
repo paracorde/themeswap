@@ -88,3 +88,7 @@ Template files just use the jinja2 syntax. Here would be a template file for a .
 The `script` under the general section of `config.toml` or the theme file will also be run, with the theme file taking higher precedence if both are defined.
 
 For example, you can set the `wallpaper` attribute under `[style]` and generate this script with a template, so that the script can set the wallpaper for the theme.
+
+## notes
+
+`opacity_percentage`, `transparency_percentage`, `argb_background`, and `rgba_background` are automatically generated, where `opacity_percentage` is an integer from 0 (transparent) to 100 (opaque) and `transparency_percentage` is an integer from 0 (opaque) to 100 (transparent).
