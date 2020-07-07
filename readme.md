@@ -1,6 +1,6 @@
 # themeswap
 
-A quick and dirty application for swapping themes with .json configuration files and jinja template files.
+A quick and dirty application for swapping themes with .toml configuration files and jinja template files.
 
 ## installation
 
@@ -13,38 +13,53 @@ pip install --user jinja2
 
 ## configuration
 
-The script will search for the config file at `~/.config/themes/config.json`. An alternate path can be supplied with the `--config` option. (Or you could just modify the script itself.)
+The script will search for the config file at `~/.config/themes/config.toml`. An alternate path can be supplied with the `--config` option. (Or you could just modify the script itself.)
 
-The `config.json` file should have be in the style below:
+The `config.toml` file should be in the style below:
 
-```json
-{
-  "generate": {
-    "/file/path/to/template": "/file/path/to/destination",
-    ...
-  },
-  "commands": [
-    "do some stuff",
-    "do more stuff",
-    ... commands to run here ...
-  ]
-}
+```toml
+[general]
+# theme_path = "~/.config/themes/documents"
+# script = "bash ~/.config/bin/themeswap"
+
+[generate]
+"/path/to/template" = "path/to/destination"
+...
 ```
 
-The theme directory will be (by default) `~/.config/themes/documents/`. Each theme file should be a .json file. An example of a theme is shown below:
+The theme directory will be (by default) `~/.config/themes/documents/`. Each theme file should be a .toml file. An example of a theme is shown below:
 
-```json
-{
-  "name": "theme_name",
-  "author": "author_name",
-  "color": [
-    ... colors 0-15 as strings here...
-  ],
-  "foreground": "#______",
-  "background": "#______",
-  "opacity": 0.0 - 1.0,
-  ... extra data as needed ...
-}
+```toml
+[general]
+name = "theme_name"
+author = "author_name"
+# script = "bash ~/.config/bin/themeswap"
+
+[style]
+color = [
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______",
+  "#______"
+]
+foreground = "#______"
+background = "#______"
+opacity = 1.0
+# additional settings you want template files to be able to access:
+# wallpaper = "~/.config/themes/wallpapers/fairylights.jpg"
+
 ```
 
 Template files just use the jinja2 syntax. Here would be a template file for a .Xresources file:
@@ -69,3 +84,7 @@ Template files just use the jinja2 syntax. Here would be a template file for a .
 *.color7: {{ color[7] }}
 *.color15: {{ color[15] }}
 ```
+
+The `script` under the general section of `config.toml` or the theme file will also be run, with the theme file taking higher precedence if both are defined.
+
+For example, you can set the `wallpaper` attribute under `[style]` and generate this script with a template, so that the script can set the wallpaper for the theme.
